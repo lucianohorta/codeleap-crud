@@ -1,0 +1,24 @@
+{
+  "name": "codeleaptest",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^0.22.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-moment": "^1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-next": "11.1.2"
+  }
+}
