@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import Comments from '../src/components/Comments';
+import instance from '../src/services/axiosConfig';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import styled from 'styled-components';
@@ -29,10 +30,8 @@ const PostContainer = styled.div`
 
 const EachPost = styled.div`
     width: 100%;
-
     ul {
         padding: 0;
-
         li {
             list-style: none;
             width: 100%;
@@ -59,7 +58,6 @@ const PostInfo = styled.div`
 const PostUser = styled.div`
     padding: 18px;
     color: #777777;
-
     &::before {
         content: '@';
     }
@@ -85,55 +83,6 @@ const Header = styled.div`
     margin: 0 auto;
 `
 
-const CommentSection = styled.div`
-    border: 1px solid #949494;
-    padding: 20px;
-
-    form {
-        padding: 0 10px;
-    }
-
-    h5 { margin-bottom: 26px; padding: 0 10px;}
-    p { font-weight: 500; margin-top: 20px; margin-bottom: 5px; }
-    input {
-        width: 100%;
-        padding-left: 8px;
-
-        &::placeholder {
-            color: #DDDDDD;
-            font-size: 14px;
-        }
-    }
-    textarea {
-        width: 100%;
-        resize: none; 
-        padding-left: 8px;
-
-        &::placeholder {
-            color: #DDDDDD;
-            font-size: 14px;
-        }
-    }
-`
-
-const SubmitBtn = styled.input`
-    background: #000;
-    color: #FFF;
-    border: 0;
-    font-weight: bold;
-    padding: 5px 10px;
-    display: flex;
-    text-align: right;
-    margin-left: auto;
-    margin-right: 0;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    justify-content: center;
-    width: 115px !important;
-    align-items: center;
-    text-align: center;
-`
-
 const EditPostContainer = styled.div`
     border: 1px solid #949494;
     width: 100%;
@@ -148,7 +97,6 @@ const RecentPostHeader = styled.div`
     font-size: 18px;
     font-weight: bold;
     margin: 0;
-
     button {
         background: transparent;
         border: 0;
@@ -159,17 +107,14 @@ const RecentPostBody = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     p {
         padding: 18px;
         color: #777777;
-
         &::before {
             content: '@';
             margin-right: -5px;
         }
     }
-
     span {
         margin-right: 20px;
         margin-top: -18px;
@@ -190,7 +135,6 @@ const EditItem = styled.div`
     right: 0;
     bottom: 0;
     background: #1f1f1f66;
-
     > div {
         display: flex;
         flex-direction: column;
@@ -202,7 +146,6 @@ const EditItem = styled.div`
         padding-left: 50px;
     }
     p { font-weight: 500; margin-top: 20px; margin-bottom: 5px; }
-
     button {
         background: #000;
         border: 0;
@@ -230,40 +173,6 @@ export default function Posts() {
     const [posts, setPosts] = useState([]);
     const [postEditing, setPostEditing] = useState("");
     const [postDelete, setPostDelete] = useState("");
-    
-    const addPost = (e) => {
-        e.preventDefault();
-
-        const newPost = {
-            id: Math.random().toString(36).substr(2, 9), //get id from api later on
-            title: e.target.title.value,
-            content: e.target.post.value,
-        };
-
-        //AXIOS POST:
-        var postData = {
-            username: localStorage.getItem('name'),
-            title: e.target.title.value,
-            content: e.target.post.value
-        };
-        let axiosConfig = {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        };
-        axios.post(baseURL, postData, axiosConfig)
-        .then((res) => {
-            console.log("POST SUCCESS: ", res);
-            setPosts([...posts, newPost]);  //update posts variable
-            e.target.title.value = "";      //reset title input after sent
-            e.target.post.value = "";       //reset post input after sent
-        })
-        .catch((err) => {
-            console.log("AXIOS ERROR: ", err);
-        })
-
-    };
 
     const deletePost = (idToDelete) => {
 
@@ -273,7 +182,7 @@ export default function Posts() {
 
             // if (post.id === idToDelete) {
                 //AXIOS DELETE:
-                axios.delete(baseURL + idToDelete, {
+                instance.delete(baseURL + idToDelete, {
                     mode: 'no-cors',
                     headers: {
                         "Accept": "application/json",
@@ -318,7 +227,7 @@ export default function Posts() {
                     }
                 };
                 let idPost = post.id;
-                axios.patch(baseURL+idPost, postData, axiosConfig)
+                instance.patch(baseURL+idPost, postData, axiosConfig)
                 .then((res) => {
                     console.log("POST SUCCESS: ", res);
 
@@ -353,7 +262,7 @@ export default function Posts() {
         }
 
         try {
-            axios.get(baseURL).then(response => {
+            instance.get(baseURL).then(response => {
                 const data = response.data.results;
                 setData(data);
     
@@ -378,19 +287,10 @@ export default function Posts() {
             </Header>
 
             <PostContainer className="postcontainer">
-                <CommentSection>
-                    <h5> What's on your mind? </h5>
-                    {/* SUBMIT BUTTON: */}
-                    <form onSubmit={addPost}>
-                        <p>Title</p>
-                        <input type="text" name="title" id="title" placeholder="Hello world" />
-                        <p>Content</p>
-                        <textarea name="post" rows="3" cols="60" placeholder="Content here"></textarea>
-                        <SubmitBtn type="Submit" value="CREATE" />
-                    </form>
-                </CommentSection>
 
-                {/* EACH POST: */}
+                <Comments />
+
+                {/* EDIT POST SECTION: */}
                 {posts.map((post) => (
                     <EditPostContainer key={post.id}>
                         {post.id !== postEditing ? (
@@ -449,6 +349,7 @@ export default function Posts() {
                     </EditPostContainer>
                 ))}
 
+                {/* POSTS: */}
                 <EachPost>
                     <ul>
                         {data.map(d => (
