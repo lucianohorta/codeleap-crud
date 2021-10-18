@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Container } from '../styles/globals';
-import LogoDiv from '../src/components/LogoDiv';
+import Logo from '../src/components/Logo';
 import Form from '../src/components/Form';
 
 export default function Login() {
@@ -15,7 +15,7 @@ export default function Login() {
 
     return (
         <Container className="container">
-            <LogoDiv />
+            <Logo />
             <Form />
         </Container>
     )

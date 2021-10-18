@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import logoImg from './../../../public/codeleap-logo.png';
-import { LogoImg } from '../LogoDiv/styles';
+import { LogoImg } from '../Logo/styles';
 
-export default function LogoDiv() {
+export default function Logo() {
 
     return (
         <LogoImg className="logo">
