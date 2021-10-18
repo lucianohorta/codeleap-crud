@@ -21,18 +21,13 @@ export default function Comments() {
             title: e.target.title.value,
             content: e.target.post.value
         };
-        let axiosConfig = {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        };
-        instance.post(baseURL, postData, axiosConfig)
+        instance.post(`/`, postData)
         .then((res) => {
             console.log("POST SUCCESS: ", res);
             setPosts([...posts, newPost]);  //update posts variable
             e.target.title.value = "";      //reset title input after sent
             e.target.post.value = "";       //reset post input after sent
+            window.location.reload();
         })
         .catch((err) => {
             console.log("AXIOS ERROR: ", err);
