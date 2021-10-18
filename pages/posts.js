@@ -47,8 +47,8 @@ export default function Posts() {
             instance.get(`/`).then(response => {
                 const data = response.data.results;
                 setData(data);
-    
-                console.log(data);
+
+                //console.log(data);
             })
         } catch(err) {
             console.log(err)
